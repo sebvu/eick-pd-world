@@ -25,8 +25,4 @@
 */
 
 int main() {
-
-  SARSA sarsa = SARSA();
-
-  QLearning qlearning = QLearning();
 }
