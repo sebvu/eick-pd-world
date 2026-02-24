@@ -42,7 +42,7 @@ private:
 
   public:
     StateWorld(int i, int j, bool x, int a, int b, int c, int d, int e, int f,
-               int tx, int ta, int tb, int tc, int td, int te, int tf)
+               bool tx, int ta, int tb, int tc, int td, int te, int tf)
         : i(i), j(j), a(a), b(b), c(c), d(d), e(e), f(f), ta(ta), tb(tb),
           tc(tc), td(td), te(te), tf(tf), x(x), tx(tx) {}
 
@@ -58,11 +58,13 @@ private:
   int gridX, gridY;
   static constexpr std::string_view PGREEDY = "PGREEDY", PEXPLOIT = "PEXPLOIT",
                                     PRANDOM = "PRANDOM";
+  const int pickupReward, dropoffReward, nReward, sReward, eReward, wReward;
 
 public:
   PDworld(int i, int j, bool x, int a, int b, int c, int d, int e, int f,
           int gridX, int gridY, bool tx, int ta, int tb, int tc, int td, int te,
-          int tf);
+          int tf, int pickupReward, int dropoffReward, int nReward, int sReward, int eReward,
+          int wReward);
 };
 
 #endif
