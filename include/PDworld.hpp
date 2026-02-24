@@ -18,7 +18,7 @@ private:
   static constexpr std::string_view PRANDOM = "PRANDOM";
   static constexpr std::string_view PEXPLOIT = "PEXPLOIT";
   static constexpr std::string_view PGREEDY = "PGREEDY";
-  static constexpr std::string_view DISPLAY = "DISPLAY";
+  static constexpr std::string_view DISPLAY = "DISPLAY"; // display the Q-table
 
 public:
   PDworld(const PDstate initialState, const PDstate terminalState,
