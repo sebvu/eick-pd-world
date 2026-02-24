@@ -23,3 +23,4 @@ bear -- make
 ## Resources Used
 
 [freecodecamp introduction to q learning RL](https://www.freecodecamp.org/news/an-introduction-to-q-learning-reinforcement-learning-14ac0b4493cc)
+[datacamp introduction q learning](https://www.datacamp.com/tutorial/introduction-q-learning-beginner-tutorial)
