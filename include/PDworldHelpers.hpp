@@ -6,7 +6,7 @@
 struct PDstate {
   int i{-1};   // xth position (-1 = *)
   int j{-1};   // yth position (-1 = *)
-  bool x;      // true if carry else false
+  bool x{false};      // true if carry else false
   int a, b, c; // pickup locations amount, (1,1) (3,3) (5,5)
   int d, e, f; // dropoff locations amount, (5,1) (5,3) (2,5)
 
