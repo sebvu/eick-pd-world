@@ -27,11 +27,21 @@
 
 class PDWorld {
 private:
-  struct StateWorld {
-    StateWorld(int i, int j, bool x, int a, int b, int c, int d, int e, int f);
+  class StateWorld {
+  private:
+    int i, j, a, b, c, d, e, f;
+    bool x;
+
+  public:
+    StateWorld(int i, int j, bool x, int a, int b, int c, int d, int e, int f)
+        : i(i), j(j), a(a), b(b), c(c), d(d), e(e), f(f), x(x) {}
   };
 
+  StateWorld state;
+
 public:
+  PDWorld(int i, int j, bool x, int a, int b, int c, int d, int e, int f)
+      : state(StateWorld(i, j, x, a, b, c, d, e, f)) {}
 };
 
 #endif
