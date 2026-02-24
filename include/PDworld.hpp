@@ -20,14 +20,21 @@ private:
   static constexpr std::string_view PGREEDY = "PGREEDY";
   static constexpr std::string_view DISPLAY = "DISPLAY"; // display the Q-table
 
+  static constexpr std::string_view NDIR = "NORTH";      // display the Q-table
+  static constexpr std::string_view EDIR = "EAST";       // display the Q-table
+  static constexpr std::string_view SDIR = "SOUTH";      // display the Q-table
+  static constexpr std::string_view WDIR = "WEST";       // display the Q-table
+  static constexpr std::string_view DROPOFF = "DROPOFF"; // display the Q-table
+  static constexpr std::string_view PICKUP = "PICKUP";   // display the Q-table
+
 public:
   PDworld(const PDstate initialState, const PDstate terminalState,
           const Rewards rewards, const double ALPHA, const double GAMMA,
           const int GRID_I, const int GRID_J);
 
-  void QLearning(std::set<std::pair<int, std::string>> instructions) {}
+  void QLearning(std::set<std::pair<int, std::string>> instructions);
 
-  void SARSA(std::set<std::pair<int, std::string>> instructions) {}
+  void SARSA(std::set<std::pair<int, std::string>> instructions);
 };
 
 #endif
