@@ -37,11 +37,21 @@ private:
   class StateWorld {
   private:
     int i, j, a, b, c, d, e, f;
-    bool x;
+    int ti, tj, ta, tb, tc, td, te, tf;
+    bool x, tx;
 
   public:
-    StateWorld(int i, int j, bool x, int a, int b, int c, int d, int e, int f)
+    StateWorld(int i, int j, bool x, int a, int b, int c, int d, int e, int f,
+               int ti, int tj, int tx, int ta, int tb, int tc, int td, int te,
+               int tf)
         : i(i), j(j), a(a), b(b), c(c), d(d), e(e), f(f), x(x) {}
+
+    bool TerminalStateReached() {
+      return (i == ti && j == tj && a == ta && b == tb && c == tc && d == td &&
+              e == te && f == tf && x == tx)
+                 ? true
+                 : false;
+    };
   };
 
   StateWorld state;
@@ -51,7 +61,8 @@ private:
 
 public:
   PDworld(int i, int j, bool x, int a, int b, int c, int d, int e, int f,
-          int gridX, int gridY);
+          int gridX, int gridY, int ti, int tj, bool tx, int ta, int tb, int tc,
+          int td, int te, int tf);
 };
 
 #endif
