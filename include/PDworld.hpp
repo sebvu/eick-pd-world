@@ -1,6 +1,9 @@
 #ifndef PDWORLD_HPP
 #define PDWORLD_HPP
 
+#include <set>
+#include <string>
+
 /*
   For both algorithms, these are the constant details
 
@@ -23,6 +26,10 @@
   drop off a block at dropoff state: +13
   applying n,s,e,w: -1
 
+  PEXPLOIT
+  PGREEDY
+  PRANDOM
+
 */
 
 class PDworld {
@@ -38,10 +45,13 @@ private:
   };
 
   StateWorld state;
+  int gridX, gridY;
+  static constexpr std::string_view PGREEDY = "PGREEDY", PEXPLOIT = "PEXPLOIT",
+                                    PRANDOM = "PRANDOM";
 
 public:
-  PDworld(int i, int j, bool x, int a, int b, int c, int d, int e, int f)
-      : state(StateWorld(i, j, x, a, b, c, d, e, f)) {}
+  PDworld(int i, int j, bool x, int a, int b, int c, int d, int e, int f,
+          int gridX, int gridY);
 };
 
 #endif
