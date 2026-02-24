@@ -25,7 +25,7 @@
 
 */
 
-class PDWorld {
+class PDworld {
 private:
   class StateWorld {
   private:
@@ -40,7 +40,7 @@ private:
   StateWorld state;
 
 public:
-  PDWorld(int i, int j, bool x, int a, int b, int c, int d, int e, int f)
+  PDworld(int i, int j, bool x, int a, int b, int c, int d, int e, int f)
       : state(StateWorld(i, j, x, a, b, c, d, e, f)) {}
 };
 
