@@ -1,6 +1,11 @@
 #include "PDworld.hpp"
 #include "PDworldHelpers.hpp"
-#include <iostream>
+#include <set>
+
+#define PRANDOM "PRANDOM"
+#define PEXPLOIT "PEXPLOIT"
+#define PGREEDY "PGREEDY"
+#define DISPLAY "DISPLAY"
 
 int main() {
 
@@ -72,4 +77,35 @@ int main() {
 
   PDworld world = PDworld(initialState, terminalState, rewards, ALPHA, GAMMA,
                           GRID_I, GRID_J);
+
+  // format of sets for experiment instructions
+
+  // (set<pair<int, string>>({STEPS, POLICY} ... or ... {STEPS, DISPLAY})
+  //  - STEPS are added on top of each other
+  //  - POLICY is just defining what policy to do till that defined step for the
+  //  algorithm
+  //  - display is simply displaying the Q-table for the experiment
+  //  - amount of steps is the STEPS combined
+
+  // Q-learning
+  std::set<std::pair<int, std::string>> experimentOneInstructions = {
+      {4000, PRANDOM}, {0, DISPLAY}, {4000, PGREEDY}, {0, DISPLAY}};
+
+  // Q-learning
+  std::set<std::pair<int, std::string>> experimentTwoInstructions = {
+      {200, PRANDOM},
+      {0, DISPLAY},
+      {3000, PEXPLOIT},
+      {0, DISPLAY},
+      {4800, PEXPLOIT}};
+
+  // SARSA
+  std::set<std::pair<int, std::string>> experimentThreeInstructions = {
+      {200, PRANDOM}, {7800, PEXPLOIT}, {0, DISPLAY}};
+
+  world.QLearning(experimentThreeInstructions);
+
+  world.QLearning(experimentTwoInstructions);
+
+  world.SARSA(experimentThreeInstructions);
 }

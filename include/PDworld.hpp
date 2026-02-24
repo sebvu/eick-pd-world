@@ -2,6 +2,7 @@
 #define PDWORLD_HPP
 
 #include "PDworldHelpers.hpp"
+#include <set>
 
 class PDworld {
 private:
@@ -13,10 +14,20 @@ private:
   const PDstate terminalState; // the terminal state for all experiments
   const Rewards rewards;       // rewards for different actions defined
 
+  // different policies
+  static constexpr std::string_view PRANDOM = "PRANDOM";
+  static constexpr std::string_view PEXPLOIT = "PEXPLOIT";
+  static constexpr std::string_view PGREEDY = "PGREEDY";
+  static constexpr std::string_view DISPLAY = "DISPLAY";
+
 public:
   PDworld(const PDstate initialState, const PDstate terminalState,
           const Rewards rewards, const double ALPHA, const double GAMMA,
           const int GRID_I, const int GRID_J);
+
+  void QLearning(std::set<std::pair<int, std::string>> instructions) {}
+
+  void SARSA(std::set<std::pair<int, std::string>> instructions) {}
 };
 
 #endif
