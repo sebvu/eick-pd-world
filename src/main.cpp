@@ -29,7 +29,6 @@ int main() {
   const PDstate initialState{
       .i = 1,
       .j = 5,
-      .x = false,
       .a = 5,
       .b = 5,
       .c = 5,
@@ -47,7 +46,6 @@ int main() {
   };
 
   const PDstate terminalState{
-      .x = false,
       .a = 0,
       .b = 0,
       .c = 0,
