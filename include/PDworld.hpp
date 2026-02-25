@@ -56,7 +56,8 @@ private:
   void setQUtil(PDstate &s, Qtable &q, Action a, double newUtil);
 
   // run the QLearning algorithm
-  double getQLearningUtility(const double r, const double Qas, const double maxNextQas);
+  double getQLearningUtility(const double r, const double Qas,
+                             const double maxNextQas);
 
   // run the SARSA algorithm
   double getSARSAUtility(const double r, const double Qas,
@@ -73,13 +74,19 @@ private:
   Action getOperationWithPEPLOIT(std::vector<Action> &ops, PDstate &s,
                                  Qtable &q);
 
+  // Markdown DISPLAY report
+  void markdownDisplay(int expNum, std::string algName, int currSteps,
+                       std::string currPolicy);
+
 public:
   PDworld(const PDstate *initialState, const PDstate *terminalState,
           const Rewards *rewards, const double ALPHA, const double GAMMA);
 
-  void QLearning(std::vector<std::pair<int, std::string>> instructions, const int experimentNum);
+  void QLearning(std::vector<std::pair<int, std::string>> instructions,
+                 const int experimentNum);
 
-  void SARSA(std::vector<std::pair<int, std::string>> instructions, const int experimentNum);
+  void SARSA(std::vector<std::pair<int, std::string>> instructions,
+             const int experimentNum);
 };
 
 #endif

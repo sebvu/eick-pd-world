@@ -1,4 +1,7 @@
 #include "PDworld.hpp"
+#include <algorithm>
+#include <fstream>
+#include <iomanip>
 #include <random>
 #include <stdexcept>
 #include <vector>
@@ -241,6 +244,29 @@ PDworld::Action PDworld::getOperationWithPEPLOIT(std::vector<Action> &ops,
   }
 
   return maxUtilOp;
+}
+
+void PDworld::markdownDisplay(int expNum, std::string algName, int currSteps,
+                              std::string currPolicy) {
+
+  auto actionSymbol = [&](Action a0) -> const char * {
+    switch (a0) {
+    case Action::North:
+      return "^";
+    case Action::South:
+      return "v";
+    case Action::East:
+      return "->";
+    case Action::West:
+      return "<-";
+    case Action::Pickup:
+      return "P";
+    case Action::Dropoff:
+      return "D";
+    default:
+      return "?";
+    }
+  };
 }
 
 // will use PRANDOM, PGREEDY, PEPLOIT and DISPLAY
