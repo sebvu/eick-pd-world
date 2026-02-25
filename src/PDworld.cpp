@@ -1,6 +1,6 @@
 #include "PDworld.hpp"
-#include <iostream>
 #include <random>
+#include <stdexcept>
 #include <vector>
 
 PDworld::PDworld(const PDstate *initialState, const PDstate *terminalState,
@@ -46,8 +46,6 @@ std::vector<PDworld::Action> PDworld::aplop(const PDstate &s) {
 // changes world state given action, returns the reward given the change
 double PDworld::apply(PDstate &s, const Action a) {
 
-  std::pair<int, int> p = {s.i, s.j};
-
   switch (a) {
   case Action::North:
     s.j--;
@@ -66,76 +64,75 @@ double PDworld::apply(PDstate &s, const Action a) {
     return PDworld::rewards.wReward;
     break;
   case Action::Pickup: {
-    (*s.loc_val[p])--;
+    s.cellRef({s.i, s.j})--;
     s.x = 1;
-    return PDworld::rewards.pickupReward;
-    break;
+    return rewards.pickupReward;
   }
   case Action::Dropoff: {
-    (*s.loc_val[p])++;
+    s.cellRef({s.i, s.j})++;
     s.x = 0;
-    return PDworld::rewards.dropoffReward;
-    break;
+    return rewards.dropoffReward;
   }
+  default:
+    throw std::logic_error("PDworld::apply: unknown Action enum value");
   }
 }
-
 double PDworld::getQUtil(PDstate &s, Qtable &q, Action a) {
   int s0 = 0, t0 = 0, u0 = 0;
+
   // not carrying
   if (s.x == 0) {
-    if (*s.loc_val[s.a_loc] >= 1) {
+    if (s.cellRef(s.a_loc) >= 1)
       s0 = 1;
-    }
-    if (*s.loc_val[s.b_loc] >= 1) {
+    if (s.cellRef(s.b_loc) >= 1)
       t0 = 1;
-    }
-    if (*s.loc_val[s.c_loc] >= 1) {
+    if (s.cellRef(s.c_loc) >= 1)
       u0 = 1;
-    }
-    // carrying
-  } else {
-    if (*s.loc_val[s.d_loc] < 5) {
+  }
+  // carrying
+  else {
+    if (s.cellRef(s.d_loc) < 5)
       s0 = 1;
-    }
-    if (*s.loc_val[s.e_loc] < 5) {
+    if (s.cellRef(s.e_loc) < 5)
       t0 = 1;
-    }
-    if (*s.loc_val[s.f_loc] < 5) {
+    if (s.cellRef(s.f_loc) < 5)
       u0 = 1;
-    }
   }
 
-  return q[s.i][s.j][s.x][s0][t0][u0][static_cast<int>(a)];
+  // make 0 indexed
+  const int ii = s.i - 1;
+  const int jj = s.j - 1;
+
+  return q[ii][jj][s.x][s0][t0][u0][static_cast<int>(a)];
 }
 
 void PDworld::setQUtil(PDstate &s, Qtable &q, Action a, double newUtil) {
   int s0 = 0, t0 = 0, u0 = 0;
+
   // not carrying
   if (s.x == 0) {
-    if (*s.loc_val[s.a_loc] >= 1) {
+    if (s.cellRef(s.a_loc) >= 1)
       s0 = 1;
-    }
-    if (*s.loc_val[s.b_loc] >= 1) {
+    if (s.cellRef(s.b_loc) >= 1)
       t0 = 1;
-    }
-    if (*s.loc_val[s.c_loc] >= 1) {
+    if (s.cellRef(s.c_loc) >= 1)
       u0 = 1;
-    }
-    // carrying
-  } else {
-    if (*s.loc_val[s.d_loc] < 5) {
+  }
+  // carrying
+  else {
+    if (s.cellRef(s.d_loc) < 5)
       s0 = 1;
-    }
-    if (*s.loc_val[s.e_loc] < 5) {
+    if (s.cellRef(s.e_loc) < 5)
       t0 = 1;
-    }
-    if (*s.loc_val[s.f_loc] < 5) {
+    if (s.cellRef(s.f_loc) < 5)
       u0 = 1;
-    }
   }
 
-  q[s.i][s.j][s.x][s0][t0][u0][static_cast<int>(a)] = newUtil;
+  // make 0 indexed
+  const int ii = s.i - 1;
+  const int jj = s.j - 1;
+
+  q[ii][jj][s.x][s0][t0][u0][static_cast<int>(a)] = newUtil;
 }
 
 double PDworld::getQLearningUtility(const double r, const double Qas,
@@ -169,6 +166,10 @@ PDworld::Action PDworld::getOperationWithPRANDOM(std::vector<Action> &ops) {
 
 PDworld::Action PDworld::getOperationWithPGREEDY(std::vector<Action> &ops,
                                                  PDstate &s, Qtable &q) {
+  if (ops.empty()) {
+    throw std::logic_error(
+        "PDWORLD getOperationWithPGREEDY: ops was empty when received");
+  }
 
   Action maxUtilOp;
 
@@ -182,6 +183,7 @@ PDworld::Action PDworld::getOperationWithPGREEDY(std::vector<Action> &ops,
     // could be better but whatevs
     if (firstRunPast == false) {
       maxUtilOp = o;
+      firstRunPast = true;
     } else if (getQUtil(s, q, o) == getQUtil(s, q, maxUtilOp)) {
       if (randomNumHelper(0, 1) == 1) {
         maxUtilOp = o;
@@ -196,6 +198,12 @@ PDworld::Action PDworld::getOperationWithPGREEDY(std::vector<Action> &ops,
 
 PDworld::Action PDworld::getOperationWithPEPLOIT(std::vector<Action> &ops,
                                                  PDstate &s, Qtable &q) {
+
+  if (ops.empty()) {
+    throw std::logic_error(
+        "PDWORLD getOperationWithPGREEDY: ops was empty when received");
+  }
+
   Action maxUtilOp;
 
   bool firstRunPast = false;

@@ -2,6 +2,7 @@
 #define PDWORLDHELPERS_HPP
 
 #include <map>
+#include <stdexcept>
 
 struct PDstate {
   int i{-1};   // xth position (-1 = *)
@@ -14,9 +15,39 @@ struct PDstate {
   const std::pair<int, int> d_loc, e_loc, f_loc; // dropoff locations
 
   // accessor to a, b, c, d, e, f
-  std::map<const std::pair<int, int>, int *> loc_val = {
-      {a_loc, &a}, {b_loc, &b}, {c_loc, &c},
-      {d_loc, &d}, {e_loc, &e}, {f_loc, &f}};
+
+  int &cellRef(const std::pair<int, int> &p) {
+    if (p == a_loc)
+      return a;
+    if (p == b_loc)
+      return b;
+    if (p == c_loc)
+      return c;
+    if (p == d_loc)
+      return d;
+    if (p == e_loc)
+      return e;
+    if (p == f_loc)
+      return f;
+    throw std::logic_error("PDstate::cellRef: p is not a special cell");
+  }
+
+  const int &cellRef(const std::pair<int, int> &p)
+      const { // overload to handle diff const and non-const refs
+    if (p == a_loc)
+      return a;
+    if (p == b_loc)
+      return b;
+    if (p == c_loc)
+      return c;
+    if (p == d_loc)
+      return d;
+    if (p == e_loc)
+      return e;
+    if (p == f_loc)
+      return f;
+    throw std::logic_error("PDstate::cellRef: p is not a special cell");
+  }
 };
 
 struct Rewards {
