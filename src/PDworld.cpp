@@ -247,7 +247,7 @@ PDworld::Action PDworld::getOperationWithPEPLOIT(std::vector<Action> &ops,
 }
 
 void PDworld::markdownDisplay(int expNum, std::string algName, int currSteps,
-                              std::string currPolicy) {
+                              std::string currPolicy, PDstate &worldState) {
 
   auto actionSymbol = [&](Action a0) -> const char * {
     switch (a0) {
@@ -266,6 +266,26 @@ void PDworld::markdownDisplay(int expNum, std::string algName, int currSteps,
     default:
       return "?";
     }
+  };
+
+  auto stuboFor = [&](int xflag) {
+    int s0 = 0, t0 = 0, u0 = 0;
+    if (xflag == 0) {
+      if (worldState.cellRef(worldState.a_loc) >= 1)
+        s0 = 1;
+      if (worldState.cellRef(worldState.b_loc) >= 1)
+        t0 = 1;
+      if (worldState.cellRef(worldState.c_loc) >= 1)
+        u0 = 1;
+    } else {
+      if (worldState.cellRef(worldState.d_loc) < 5)
+        s0 = 1;
+      if (worldState.cellRef(worldState.e_loc) < 5)
+        t0 = 1;
+      if (worldState.cellRef(worldState.f_loc) < 5)
+        u0 = 1;
+    }
+    return std::array<int, 3>{s0, t0, u0};
   };
 }
 
