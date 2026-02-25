@@ -396,16 +396,13 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
 
   std::string algName = "QLearning";
   int currSteps = 0;
-  int newSteps = 0;
   std::string currPolicy = "N/A";
 
   for (auto &p : i) {
-    // add newSteps to currSteps, and flush newSteps
-    currSteps = newSteps;
-    newSteps = 0;
     if (p.second == PRANDOM) {
       // PRANDOM Qlearning
-      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
+      for (int k = 0; k < p.first; k++) {
+        currSteps++;
         currPolicy = PRANDOM;
 
         std::vector<Action> operations = aplop(worldState);
@@ -426,7 +423,8 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
       }
     } else if (p.second == PGREEDY) {
       // PGREEDY Qlearning
-      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
+      for (int k = 0; k < p.first; k++) {
+        currSteps++;
         currPolicy = PGREEDY;
 
         std::vector<Action> operations = aplop(worldState);
@@ -448,7 +446,8 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
       }
     } else if (p.second == PEPLOIT) {
       // PEPLOIT Qlearning
-      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
+      for (int k = 0; k < p.first; k++) {
+        currSteps++;
         currPolicy = PEPLOIT;
 
         std::vector<Action> operations = aplop(worldState);
@@ -485,16 +484,13 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
 
   std::string algName = "SARSA";
   int currSteps = 0;
-  int newSteps = 0;
   std::string currPolicy = "N/A";
 
   for (auto &p : i) {
-    // add newSteps to currSteps, and flush newSteps
-    currSteps = newSteps;
-    newSteps = 0;
     if (p.second == PRANDOM) {
       // PRANDOM SARSA
-      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
+      for (int k = 0; k < p.first; k++) {
+        currSteps++;
         currPolicy = PRANDOM;
 
         std::vector<Action> operations = aplop(worldState);
@@ -515,7 +511,8 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
       }
     } else if (p.second == PEPLOIT) {
       // PEPLOIT SARSA
-      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
+      for (int k = 0; k < p.first; k++) {
+        currSteps++;
         currPolicy = PEPLOIT;
 
         std::vector<Action> operations = aplop(worldState);
