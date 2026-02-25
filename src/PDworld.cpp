@@ -33,7 +33,7 @@ std::vector<PDworld::Action> PDworld::aplop(const PDstate &s) {
 
   // verify if dropoff is valid
   bool onDropoffD = isAt({s.d_loc.first, s.d_loc.second});
-  bool onDropoffE = isAt({s.e_loc.first, s.d_loc.second});
+  bool onDropoffE = isAt({s.e_loc.first, s.e_loc.second});
   bool onDropoffF = isAt({s.f_loc.first, s.f_loc.second});
   if (s.x == true && (onDropoffD || onDropoffE || onDropoffF))
     ops.push_back(Action::Dropoff);
