@@ -41,37 +41,43 @@ std::vector<PDworld::Action> PDworld::aplop(const PDstate &s) {
   return ops;
 }
 
-// only apply changes to the world state, not the Q table as that is applied by
-// the algorithm
-void PDworld::apply(PDstate &s, const Action a) {
+// changes world state given action, returns the reward given the change
+int PDworld::apply(PDstate &s, const Action a) {
 
   std::pair<int, int> p = {s.i, s.j};
 
   switch (a) {
   case Action::North:
     s.j--;
+    return PDworld::rewards.nReward;
     break;
   case Action::East:
     s.i++;
+    return PDworld::rewards.eReward;
     break;
   case Action::South:
     s.j++;
+    return PDworld::rewards.sReward;
     break;
   case Action::West:
     s.i--;
+    return PDworld::rewards.wReward;
     break;
   case Action::Pickup: {
     (*s.loc_val[p])--;
+    return PDworld::rewards.pickupReward;
     break;
   }
   case Action::Dropoff: {
     (*s.loc_val[p])++;
+    return PDworld::rewards.dropoffReward;
     break;
   }
   }
 }
 
 void PDworld::QLearning(std::vector<std::pair<int, std::string>> instructions) {
+
 }
 
 void PDworld::SARSA(std::vector<std::pair<int, std::string>> instructions) {}

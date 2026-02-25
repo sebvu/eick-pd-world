@@ -40,8 +40,8 @@ private:
   // return a set of applicable operations
   std::vector<Action> aplop(const PDstate &s);
 
-  // apply only to the PDworld
-  void apply(PDstate &s, const Action a);
+  // apply the world state given action, return reward given the change
+  int apply(PDstate &s, const Action a);
 
 public:
   PDworld(const PDstate *initialState, const PDstate *terminalState,
