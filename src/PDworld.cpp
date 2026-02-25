@@ -165,6 +165,47 @@ PDworld::Action PDworld::getOperationWithPGREEDY(std::vector<Action> &ops,
   return maxUtilOp;
 }
 
+PDworld::Action PDworld::getOperationWithPEPLOIT(std::vector<Action> &ops,
+                                                 PDstate &s, Qtable &q) {
+  Action maxUtilOp;
+
+  bool firstRunPast = false;
+
+  for (auto &o : ops) {
+    if (o == Action::Dropoff || o == Action::Pickup) {
+      return o;
+    }
+
+    if (firstRunPast == false) {
+      maxUtilOp = o;
+      firstRunPast = true;
+    } else if (getQUtil(s, q, o) == getQUtil(s, q, maxUtilOp)) {
+      if (randomNumHelper(0, 1) == 1) {
+        maxUtilOp = o;
+      }
+    } else if (getQUtil(s, q, o) > getQUtil(s, q, maxUtilOp)) {
+      maxUtilOp = o;
+    }
+  }
+
+  if (randomNumHelper(1, 10) <= 8) {
+    return maxUtilOp;
+  }
+
+  std::vector<Action> others;
+  for (auto &candidate : ops) {
+    if (candidate != maxUtilOp) {
+      others.push_back(candidate);
+    }
+  }
+
+  if (!others.empty()) {
+    return others[randomNumHelper(0, others.size() - 1)];
+  }
+
+  return maxUtilOp;
+}
+
 // will use PRANDOM, PGREEDY, PEXPLOIT and DISPLAY
 void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
 

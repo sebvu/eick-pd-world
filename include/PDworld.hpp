@@ -68,7 +68,8 @@ private:
                                  Qtable &q);
 
   // PEXPLOIT policy
-  Action getOperationWithPEXPLOIT(std::vector<Action> ops);
+  Action getOperationWithPEPLOIT(std::vector<Action> &ops, PDstate &s,
+                                 Qtable &q);
 
 public:
   PDworld(const PDstate *initialState, const PDstate *terminalState,
