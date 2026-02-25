@@ -2,6 +2,7 @@
 #define PDWORLD_HPP
 
 #include "PDworldHelpers.hpp"
+#include <array>
 #include <set>
 
 class PDworld {
@@ -19,6 +20,8 @@ private:
   using QTable = std::array<
       std::array<std::array<std::array<double, NUM_ACTIONS>, 2>, GRID_I>,
       GRID_J>;
+
+  QTable Q{}; // the actual Q-table initialized, all values as 0
 
   // different policies
   static constexpr std::string_view PRANDOM = "PRANDOM";
