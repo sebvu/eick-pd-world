@@ -1,5 +1,4 @@
 #include "PDworld.hpp"
-#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <random>
@@ -247,7 +246,8 @@ PDworld::Action PDworld::getOperationWithPEPLOIT(std::vector<Action> &ops,
 }
 
 void PDworld::markdownDisplay(int expNum, std::string algName, int currSteps,
-                              std::string currPolicy, PDstate &worldState) {
+                              std::string currPolicy, PDstate &worldState,
+                              Qtable &q) {
 
   auto actionSymbol = [&](Action a0) -> const char * {
     switch (a0) {
@@ -287,6 +287,103 @@ void PDworld::markdownDisplay(int expNum, std::string algName, int currSteps,
     }
     return std::array<int, 3>{s0, t0, u0};
   };
+
+  auto bestAt = [&](int i1, int j1, int xflag) {
+    // i1/j1 are 1-indexed
+    const int ii = i1 - 1;
+    const int jj = j1 - 1;
+    auto [s0, t0, u0] = stuboFor(xflag);
+
+    // candidate actions (moves always exist in Qtable, but you may choose to
+    // still display best direction; pickup/dropoff only make sense on special
+    // cells)
+    std::array<Action, 6> candidates = {Action::North,  Action::East,
+                                        Action::South,  Action::West,
+                                        Action::Pickup, Action::Dropoff};
+
+    // filter applicability for pickup/dropoff based on current world counts
+    auto applicable = [&](Action a0) {
+      if (a0 == Action::Pickup) {
+        if (xflag != 0)
+          return false;
+        if (std::pair<int, int>{i1, j1} != worldState.a_loc &&
+            std::pair<int, int>{i1, j1} != worldState.b_loc &&
+            std::pair<int, int>{i1, j1} != worldState.c_loc)
+          return false;
+        // at least one block in that pickup cell (based on current world)
+        return worldState.cellRef({i1, j1}) >= 1;
+      }
+      if (a0 == Action::Dropoff) {
+        if (xflag != 1)
+          return false;
+        if (std::pair<int, int>{i1, j1} != worldState.d_loc &&
+            std::pair<int, int>{i1, j1} != worldState.e_loc &&
+            std::pair<int, int>{i1, j1} != worldState.f_loc)
+          return false;
+        // dropoff cell has room
+        return worldState.cellRef({i1, j1}) < 5;
+      }
+      return true; // moves always "allowed to compare"
+    };
+
+    Action bestA = Action::North;
+    double bestQ = q[ii][jj][xflag][s0][t0][u0][static_cast<int>(bestA)];
+
+    bool init = false;
+    for (auto a0 : candidates) {
+      if (!applicable(a0))
+        continue;
+      double val = q[ii][jj][xflag][s0][t0][u0][static_cast<int>(a0)];
+      if (!init || val > bestQ) {
+        bestQ = val;
+        bestA = a0;
+        init = true;
+      } else if (val == bestQ) {
+        // tiny tie-break randomness (optional): keep stable instead if you want
+        if (randomNumHelper(0, 1) == 1)
+          bestA = a0;
+      }
+    }
+    return std::pair<double, Action>{bestQ, bestA};
+  };
+
+  std::ofstream md("pdworld_report.md", std::ios::app);
+  if (!md)
+    throw std::runtime_error("DISPLAY: failed to open pdworld_report.md");
+
+  md << "\n---\n\n";
+  md << "# Experiment: " << expNum << "\n";
+  md << "- CurrStep: " << currSteps << "\n";
+  md << "- Algorithm: " << algName << "\n";
+  md << "- CurrentPolicy: " << currPolicy << "\n\n";
+
+  auto writeTable = [&](int xflag) {
+    md << "## Qtable (x=" << xflag << ")\n\n";
+    // header row
+    md << "|";
+    for (int col = 1; col <= GRID_I; col++)
+      md << " " << col << " |";
+    md << "\n|";
+    for (int col = 1; col <= GRID_I; col++)
+      md << " --- |";
+    md << "\n";
+
+    // rows j=1..5 (top to bottom). If you want (1,1) at bottom-left, reverse
+    // this.
+    for (int row = 1; row <= GRID_J; row++) {
+      md << "|";
+      for (int col = 1; col <= GRID_I; col++) {
+        auto [qv, ba] = bestAt(col, row, xflag);
+        md << " " << std::fixed << std::setprecision(2) << qv << " "
+           << actionSymbol(ba) << " |";
+      }
+      md << "\n";
+    }
+    md << "\n";
+  };
+
+  writeTable(0);
+  writeTable(1);
 }
 
 // will use PRANDOM, PGREEDY, PEPLOIT and DISPLAY
@@ -297,6 +394,7 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
   PDstate worldState = initialState;
   Qtable Q{};
 
+  std::string algName = "QLearning";
   int currSteps = 0;
   int newSteps = 0;
   std::string currPolicy = "N/A";
@@ -371,7 +469,8 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
         setQUtil(prevWorldState, Q, op, calculatedUtil); // set new Qas
       }
     } else if (p.second == DISPLAY) {
-      // DISPLAY Qlearning
+      markdownDisplay(experimentNum, algName, currSteps, currPolicy, worldState,
+                      Q);
     }
   }
 }
@@ -384,6 +483,7 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
   PDstate worldState = initialState;
   Qtable Q{};
 
+  std::string algName = "SARSA";
   int currSteps = 0;
   int newSteps = 0;
   std::string currPolicy = "N/A";
@@ -436,7 +536,8 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
         setQUtil(prevWorldState, Q, op, calculatedUtil); // set new Qas
       }
     } else if (p.second == DISPLAY) {
-      // DISPLAY SARSA
+      markdownDisplay(experimentNum, algName, currSteps, currPolicy, worldState,
+                      Q);
     }
   }
 }

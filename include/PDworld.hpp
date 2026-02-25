@@ -76,7 +76,7 @@ private:
 
   // Markdown DISPLAY report
   void markdownDisplay(int expNum, std::string algName, int currSteps,
-                       std::string currPolicy, PDstate &worldState);
+                       std::string currPolicy, PDstate &worldState, Qtable &q);
 
 public:
   PDworld(const PDstate *initialState, const PDstate *terminalState,
