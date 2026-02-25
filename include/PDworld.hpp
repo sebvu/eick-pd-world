@@ -77,9 +77,9 @@ public:
   PDworld(const PDstate *initialState, const PDstate *terminalState,
           const Rewards *rewards, const double ALPHA, const double GAMMA);
 
-  void QLearning(std::vector<std::pair<int, std::string>> instructions);
+  void QLearning(std::vector<std::pair<int, std::string>> instructions, const int experimentNum);
 
-  void SARSA(std::vector<std::pair<int, std::string>> instructions);
+  void SARSA(std::vector<std::pair<int, std::string>> instructions, const int experimentNum);
 };
 
 #endif

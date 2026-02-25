@@ -244,7 +244,8 @@ PDworld::Action PDworld::getOperationWithPEPLOIT(std::vector<Action> &ops,
 }
 
 // will use PRANDOM, PGREEDY, PEPLOIT and DISPLAY
-void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
+void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
+                        const int experimentNum) {
 
   // initlization of PDworld
   PDstate worldState = initialState;
@@ -317,7 +318,8 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
 }
 
 // will use PRANDOM, PEPLOIT and DISPLAY
-void PDworld::SARSA(std::vector<std::pair<int, std::string>> i) {
+void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
+                    const int experimentNum) {
 
   // initlization of PDworld
   PDstate worldState = initialState;
