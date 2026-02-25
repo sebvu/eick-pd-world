@@ -253,7 +253,7 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
 
   int currSteps = 0;
   int newSteps = 0;
-  std::string policy = "N/A";
+  std::string currPolicy = "N/A";
 
   for (auto &p : i) {
     // add newSteps to currSteps, and flush newSteps
@@ -262,7 +262,7 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
     if (p.second == PRANDOM) {
       // PRANDOM Qlearning
       for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
-        policy = PRANDOM;
+        currPolicy = PRANDOM;
 
         std::vector<Action> operations = aplop(worldState);
         Action op = getOperationWithPRANDOM(operations); // op to make
@@ -283,7 +283,7 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
     } else if (p.second == PGREEDY) {
       // PGREEDY Qlearning
       for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
-        policy = PGREEDY;
+        currPolicy = PGREEDY;
 
         std::vector<Action> operations = aplop(worldState);
         Action op =
@@ -305,7 +305,7 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
     } else if (p.second == PEPLOIT) {
       // PEPLOIT Qlearning
       for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
-        policy = PEPLOIT;
+        currPolicy = PEPLOIT;
 
         std::vector<Action> operations = aplop(worldState);
         Action op =
@@ -340,7 +340,7 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
 
   int currSteps = 0;
   int newSteps = 0;
-  std::string policy = "N/A";
+  std::string currPolicy = "N/A";
 
   for (auto &p : i) {
     // add newSteps to currSteps, and flush newSteps
@@ -349,7 +349,7 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
     if (p.second == PRANDOM) {
       // PRANDOM SARSA
       for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
-        policy = PRANDOM;
+        currPolicy = PRANDOM;
 
         std::vector<Action> operations = aplop(worldState);
         Action op = getOperationWithPRANDOM(operations); // op to make
@@ -370,7 +370,7 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
     } else if (p.second == PEPLOIT) {
       // PEPLOIT SARSA
       for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
-        policy = PEPLOIT;
+        currPolicy = PEPLOIT;
 
         std::vector<Action> operations = aplop(worldState);
         Action op =
