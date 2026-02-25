@@ -1,5 +1,6 @@
 #include "PDworld.hpp"
 #include "PDworldHelpers.hpp"
+#include <fstream>
 #include <vector>
 
 #define PRANDOM "PRANDOM"
@@ -8,6 +9,10 @@
 #define DISPLAY "DISPLAY"
 
 int main() {
+
+  // too last minute to do GUI so just a markdown woo
+  std::ofstream out("pdworld_report.md");
+  out << "# PD-World Report\n\n";
 
   /* initial state: (1,5,0,5,5,5,0,0,0)
   terminal state: (*,*,0,0,0,0,5,5,5)
