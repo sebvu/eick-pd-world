@@ -1,7 +1,5 @@
 #ifndef PDWORLDHELPERS_HPP
 #define PDWORLDHELPERS_HPP
-
-#include <map>
 #include <stdexcept>
 
 struct PDstate {
