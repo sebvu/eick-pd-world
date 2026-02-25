@@ -78,7 +78,9 @@ int PDworld::apply(PDstate &s, const Action a) {
 
 // will use PRANDOM, PGREEDY, PEXPLOIT and DISPLAY
 void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
-  PDstate worldState;
+
+  // initlization of PDworld
+  PDstate worldState = initialState;
   QTable Q{};
 
   for (auto &p : i) {
@@ -102,7 +104,9 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
 
 // will use PRANDOM, PEXPLOIT and DISPLAY
 void PDworld::SARSA(std::vector<std::pair<int, std::string>> i) {
-  PDstate worldState;
+
+  // initlization of PDworld
+  PDstate worldState = initialState;
   QTable Q{};
 
   for (auto &p : i) {
