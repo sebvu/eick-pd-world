@@ -251,10 +251,16 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
   PDstate worldState = initialState;
   Qtable Q{};
 
+  int currSteps = 0;
+  int newSteps = 0;
+
   for (auto &p : i) {
+    // add newSteps to currSteps, and flush newSteps
+    currSteps = newSteps;
+    newSteps = 0;
     if (p.second == PRANDOM) {
       // PRANDOM Qlearning
-      for (int i = 0; i < p.first; i++) {
+      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
         std::vector<Action> operations = aplop(worldState);
         Action op = getOperationWithPRANDOM(operations); // op to make
         int Qas = getQUtil(worldState, Q, op);           // current Qas
@@ -273,7 +279,7 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
       }
     } else if (p.second == PGREEDY) {
       // PGREEDY Qlearning
-      for (int i = 0; i < p.first; i++) {
+      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
         std::vector<Action> operations = aplop(worldState);
         Action op =
             getOperationWithPGREEDY(operations, worldState, Q); // op to make
@@ -293,7 +299,7 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i,
       }
     } else if (p.second == PEPLOIT) {
       // PEPLOIT Qlearning
-      for (int i = 0; i < p.first; i++) {
+      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
         std::vector<Action> operations = aplop(worldState);
         Action op =
             getOperationWithPEPLOIT(operations, worldState, Q); // op to make
@@ -325,10 +331,16 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
   PDstate worldState = initialState;
   Qtable Q{};
 
+  int currSteps = 0;
+  int newSteps = 0;
+
   for (auto &p : i) {
+    // add newSteps to currSteps, and flush newSteps
+    currSteps = newSteps;
+    newSteps = 0;
     if (p.second == PRANDOM) {
       // PRANDOM SARSA
-      for (int i = 0; i < p.first; i++) {
+      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
         std::vector<Action> operations = aplop(worldState);
         Action op = getOperationWithPRANDOM(operations); // op to make
         int Qas = getQUtil(worldState, Q, op);           // current Qas
@@ -347,7 +359,7 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
       }
     } else if (p.second == PEPLOIT) {
       // PEPLOIT SARSA
-      for (int i = 0; i < p.first; i++) {
+      for (newSteps = 0; newSteps < currSteps + p.first; newSteps++) {
         std::vector<Action> operations = aplop(worldState);
         Action op =
             getOperationWithPEPLOIT(operations, worldState, Q); // op to make
