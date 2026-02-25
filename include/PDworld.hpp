@@ -41,6 +41,8 @@ private:
   // return a set of applicable operations
   std::vector<Action> aplop(const PDstate &s);
 
+  void apply(PDstate &s);
+
 public:
   PDworld(const PDstate *initialState, const PDstate *terminalState,
           const Rewards *rewards, const double ALPHA, const double GAMMA);

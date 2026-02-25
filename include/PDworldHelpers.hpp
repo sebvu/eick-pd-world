@@ -10,17 +10,17 @@ struct PDstate {
   int a, b, c; // pickup locations amount, (1,1) (3,3) (5,5)
   int d, e, f; // dropoff locations amount, (5,1) (5,3) (2,5)
 
-  std::pair<int, int> a_loc, b_loc, c_loc; // pickup locations
-  std::pair<int, int> d_loc, e_loc, f_loc; // dropoff locations
+  const std::pair<int, int> a_loc, b_loc, c_loc; // pickup locations
+  const std::pair<int, int> d_loc, e_loc, f_loc; // dropoff locations
 };
 
 struct Rewards {
-  int pickupReward;
-  int dropoffReward;
-  int nReward;
-  int sReward;
-  int eReward;
-  int wReward;
+  const int pickupReward;
+  const int dropoffReward;
+  const int nReward;
+  const int sReward;
+  const int eReward;
+  const int wReward;
 };
 
 #endif

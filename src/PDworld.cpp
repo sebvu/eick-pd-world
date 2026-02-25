@@ -41,6 +41,10 @@ std::vector<PDworld::Action> PDworld::aplop(const PDstate &s) {
   return ops;
 }
 
+void PDworld::apply(PDstate &s) {
+
+}
+
 void PDworld::QLearning(std::vector<std::pair<int, std::string>> instructions) {
 }
 
