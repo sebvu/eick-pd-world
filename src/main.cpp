@@ -1,6 +1,6 @@
 #include "PDworld.hpp"
 #include "PDworldHelpers.hpp"
-#include <set>
+#include <vector>
 
 #define PRANDOM "PRANDOM"
 #define PEXPLOIT "PEXPLOIT"
@@ -71,7 +71,7 @@ int main() {
 
   // actual PDworld initializaiton and tests
 
-  PDworld world = PDworld(initialState, terminalState, rewards, ALPHA, GAMMA);
+  PDworld world = PDworld(&initialState, &terminalState, &rewards, ALPHA, GAMMA);
 
   // format of sets for experiment instructions
 
@@ -83,11 +83,11 @@ int main() {
   //  - amount of steps is the STEPS combined
 
   // Q-learning
-  std::set<std::pair<int, std::string>> experimentOneInstructions = {
+  std::vector<std::pair<int, std::string>> experimentOneInstructions = {
       {4000, PRANDOM}, {0, DISPLAY}, {4000, PGREEDY}, {0, DISPLAY}};
 
   // Q-learning
-  std::set<std::pair<int, std::string>> experimentTwoInstructions = {
+  std::vector<std::pair<int, std::string>> experimentTwoInstructions = {
       {200, PRANDOM},
       {0, DISPLAY},
       {3000, PEXPLOIT},
@@ -95,7 +95,7 @@ int main() {
       {4800, PEXPLOIT}};
 
   // SARSA
-  std::set<std::pair<int, std::string>> experimentThreeInstructions = {
+  std::vector<std::pair<int, std::string>> experimentThreeInstructions = {
       {200, PRANDOM}, {7800, PEXPLOIT}, {0, DISPLAY}};
 
   world.QLearning(experimentThreeInstructions);
