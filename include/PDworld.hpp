@@ -3,6 +3,7 @@
 
 #include "PDworldHelpers.hpp"
 #include <array>
+#include <string>
 #include <vector>
 
 class PDworld {
@@ -20,8 +21,6 @@ private:
   using QTable = std::array<
       std::array<std::array<std::array<double, NUM_ACTIONS>, 2>, GRID_I>,
       GRID_J>;
-
-  QTable Q{}; // the actual Q-table initialized, all values as 0
 
   // different policies
   static constexpr std::string_view PRANDOM = "PRANDOM";
@@ -41,7 +40,8 @@ private:
   // return a set of applicable operations
   std::vector<Action> aplop(const PDstate &s);
 
-  void apply(PDstate &s);
+  // apply only to the PDworld
+  void apply(PDstate &s, const Action a);
 
 public:
   PDworld(const PDstate *initialState, const PDstate *terminalState,
