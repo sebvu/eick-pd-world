@@ -103,9 +103,9 @@ int main() {
   std::vector<std::pair<int, std::string>> experimentThreeInstructions = {
       {200, PRANDOM}, {7800, PEXPLOIT}, {6767676767767, DISPLAY}};
 
-  world.QLearning(experimentOneInstructions);
+  world.QLearning(experimentOneInstructions, 1);
 
-  world.QLearning(experimentTwoInstructions);
+  world.QLearning(experimentTwoInstructions, 2);
 
-  world.SARSA(experimentThreeInstructions);
+  world.SARSA(experimentThreeInstructions, 3);
 }
