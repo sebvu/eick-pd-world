@@ -109,6 +109,35 @@ double PDworld::getQUtil(PDstate &s, Qtable &q, Action a) {
   return q[s.i][s.j][s.x][s0][t0][u0][static_cast<int>(a)];
 }
 
+void PDworld::setQUtil(PDstate &s, Qtable &q, Action a, double newUtil) {
+  int s0 = 0, t0 = 0, u0 = 0;
+  // not carrying
+  if (s.x == 0) {
+    if (*s.loc_val[s.a_loc] >= 1) {
+      s0 = 1;
+    }
+    if (*s.loc_val[s.b_loc] >= 1) {
+      t0 = 1;
+    }
+    if (*s.loc_val[s.c_loc] >= 1) {
+      u0 = 1;
+    }
+    // carrying
+  } else {
+    if (*s.loc_val[s.d_loc] < 5) {
+      s0 = 1;
+    }
+    if (*s.loc_val[s.e_loc] < 5) {
+      t0 = 1;
+    }
+    if (*s.loc_val[s.f_loc] < 5) {
+      u0 = 1;
+    }
+  }
+
+  q[s.i][s.j][s.x][s0][t0][u0][static_cast<int>(a)] = newUtil;
+}
+
 double PDworld::getQLearningUtility(const double r, const double Qas,
                                     const double maxNextQas) {
   return ((1 - ALPHA) * Qas) + ALPHA * (r + (GAMMA * maxNextQas));
@@ -206,7 +235,7 @@ PDworld::Action PDworld::getOperationWithPEPLOIT(std::vector<Action> &ops,
   return maxUtilOp;
 }
 
-// will use PRANDOM, PGREEDY, PEXPLOIT and DISPLAY
+// will use PRANDOM, PGREEDY, PEPLOIT and DISPLAY
 void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
 
   // initlization of PDworld
@@ -217,14 +246,61 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
     if (p.second == PRANDOM) {
       // PRANDOM Qlearning
       for (int i = 0; i < p.first; i++) {
+        std::vector<Action> operations = aplop(worldState);
+        Action op = getOperationWithPRANDOM(operations); // op to make
+        int Qas = getQUtil(worldState, Q, op);           // current Qas
+        PDstate prevWorldState = worldState; // capture prev world state
+        double r = apply(worldState, op);    // change worldstate
+
+        std::vector<Action> futureOps = aplop(worldState); // new worldstate
+        Action maxNextOp = getOperationWithPGREEDY(
+            futureOps, worldState, Q); // gets highest Q util next op
+        double maxNextQas =
+            getQUtil(worldState, Q, maxNextOp); // get that highest Q util value
+        double calculatedUtil =
+            getQLearningUtility(r, Qas, maxNextQas); // calculate util for Qas
+
+        setQUtil(prevWorldState, Q, op, calculatedUtil); // set new Qas
       }
     } else if (p.second == PGREEDY) {
       // PGREEDY Qlearning
       for (int i = 0; i < p.first; i++) {
+        std::vector<Action> operations = aplop(worldState);
+        Action op =
+            getOperationWithPGREEDY(operations, worldState, Q); // op to make
+        int Qas = getQUtil(worldState, Q, op);                  // current Qas
+        PDstate prevWorldState = worldState; // capture prev world state
+        double r = apply(worldState, op);    // change worldstate
+
+        std::vector<Action> futureOps = aplop(worldState); // new worldstate
+        Action maxNextOp = getOperationWithPGREEDY(
+            futureOps, worldState, Q); // gets highest Q util next op
+        double maxNextQas =
+            getQUtil(worldState, Q, maxNextOp); // get that highest Q util value
+        double calculatedUtil =
+            getQLearningUtility(r, Qas, maxNextQas); // calculate util for Qas
+
+        setQUtil(prevWorldState, Q, op, calculatedUtil); // set new Qas
       }
-    } else if (p.second == PEXPLOIT) {
-      // PEXPLOIT Qlearning
+    } else if (p.second == PEPLOIT) {
+      // PEPLOIT Qlearning
       for (int i = 0; i < p.first; i++) {
+        std::vector<Action> operations = aplop(worldState);
+        Action op =
+            getOperationWithPEPLOIT(operations, worldState, Q); // op to make
+        int Qas = getQUtil(worldState, Q, op);                  // current Qas
+        PDstate prevWorldState = worldState; // capture prev world state
+        double r = apply(worldState, op);    // change worldstate
+
+        std::vector<Action> futureOps = aplop(worldState); // new worldstate
+        Action maxNextOp = getOperationWithPGREEDY(
+            futureOps, worldState, Q); // gets highest Q util next op
+        double maxNextQas =
+            getQUtil(worldState, Q, maxNextOp); // get that highest Q util value
+        double calculatedUtil =
+            getQLearningUtility(r, Qas, maxNextQas); // calculate util for Qas
+
+        setQUtil(prevWorldState, Q, op, calculatedUtil); // set new Qas
       }
     } else if (p.second == DISPLAY) {
       // DISPLAY Qlearning
@@ -232,7 +308,7 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
   }
 }
 
-// will use PRANDOM, PEXPLOIT and DISPLAY
+// will use PRANDOM, PEPLOIT and DISPLAY
 void PDworld::SARSA(std::vector<std::pair<int, std::string>> i) {
 
   // initlization of PDworld
@@ -243,10 +319,41 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i) {
     if (p.second == PRANDOM) {
       // PRANDOM SARSA
       for (int i = 0; i < p.first; i++) {
+        std::vector<Action> operations = aplop(worldState);
+        Action op = getOperationWithPRANDOM(operations); // op to make
+        int Qas = getQUtil(worldState, Q, op);           // current Qas
+        PDstate prevWorldState = worldState; // capture prev world state
+        double r = apply(worldState, op);    // change worldstate
+
+        std::vector<Action> futureOps = aplop(worldState); // new worldstate
+        Action randomNextOp =
+            getOperationWithPRANDOM(operations); // re-run same policy
+        double randomNextQas =
+            getQUtil(worldState, Q, randomNextOp); // get QUtil
+        double calculatedUtil =
+            getSARSAUtility(r, Qas, randomNextQas); // calculate SARSA
+
+        setQUtil(prevWorldState, Q, op, calculatedUtil); // set new Qas
       }
-    } else if (p.second == PEXPLOIT) {
-      // PEXPLOIT SARSA
+    } else if (p.second == PEPLOIT) {
+      // PEPLOIT SARSA
       for (int i = 0; i < p.first; i++) {
+        std::vector<Action> operations = aplop(worldState);
+        Action op =
+            getOperationWithPEPLOIT(operations, worldState, Q); // op to make
+        int Qas = getQUtil(worldState, Q, op);                  // current Qas
+        PDstate prevWorldState = worldState; // capture prev world state
+        double r = apply(worldState, op);    // change worldstate
+
+        std::vector<Action> futureOps = aplop(worldState); // new worldstate
+        Action randomNextOp = getOperationWithPEPLOIT(operations, worldState,
+                                                      Q); // re-run same policy
+        double randomNextQas =
+            getQUtil(worldState, Q, randomNextOp); // get QUtil
+        double calculatedUtil =
+            getSARSAUtility(r, Qas, randomNextQas); // calculate SARSA
+
+        setQUtil(prevWorldState, Q, op, calculatedUtil); // set new Qas
       }
     } else if (p.second == DISPLAY) {
       // DISPLAY SARSA

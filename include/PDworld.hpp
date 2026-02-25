@@ -31,7 +31,7 @@ private:
 
   // different policies
   static constexpr std::string_view PRANDOM = "PRANDOM";
-  static constexpr std::string_view PEXPLOIT = "PEXPLOIT";
+  static constexpr std::string_view PEPLOIT = "PEPLOIT";
   static constexpr std::string_view PGREEDY = "PGREEDY";
   static constexpr std::string_view DISPLAY = "DISPLAY"; // display the Q-table
 
@@ -53,8 +53,10 @@ private:
   // get the requsted Q value
   double getQUtil(PDstate &s, Qtable &q, Action a);
 
+  void setQUtil(PDstate &s, Qtable &q, Action a, double newUtil);
+
   // run the QLearning algorithm
-  double getQLearningUtility(const double r, const double Qas, double maxQas);
+  double getQLearningUtility(const double r, const double Qas, const double maxNextQas);
 
   // run the SARSA algorithm
   double getSARSAUtility(const double r, const double Qas,
@@ -67,7 +69,7 @@ private:
   Action getOperationWithPGREEDY(std::vector<Action> &ops, PDstate &s,
                                  Qtable &q);
 
-  // PEXPLOIT policy
+  // PEPLOIT policy
   Action getOperationWithPEPLOIT(std::vector<Action> &ops, PDstate &s,
                                  Qtable &q);
 
