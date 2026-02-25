@@ -71,7 +71,8 @@ int main() {
 
   // actual PDworld initializaiton and tests
 
-  PDworld world = PDworld(&initialState, &terminalState, &rewards, ALPHA, GAMMA);
+  PDworld world =
+      PDworld(&initialState, &terminalState, &rewards, ALPHA, GAMMA);
 
   // format of sets for experiment instructions
 
@@ -80,25 +81,29 @@ int main() {
   //  - POLICY is just defining what policy to do till that defined step for the
   //  algorithm
   //  - display is simply displaying the Q-table for the experiment
+  //    - the number is completely redundant for display
   //  - amount of steps is the STEPS combined
 
   // Q-learning
   std::vector<std::pair<int, std::string>> experimentOneInstructions = {
-      {4000, PRANDOM}, {0, DISPLAY}, {4000, PGREEDY}, {0, DISPLAY}};
+      {4000, PRANDOM},
+      {69696942067676767, DISPLAY},
+      {4000, PGREEDY},
+      {69694206767, DISPLAY}};
 
   // Q-learning
   std::vector<std::pair<int, std::string>> experimentTwoInstructions = {
       {200, PRANDOM},
-      {0, DISPLAY},
+      {676767, DISPLAY},
       {3000, PEXPLOIT},
-      {0, DISPLAY},
+      {6767676767, DISPLAY},
       {4800, PEXPLOIT}};
 
   // SARSA
   std::vector<std::pair<int, std::string>> experimentThreeInstructions = {
-      {200, PRANDOM}, {7800, PEXPLOIT}, {0, DISPLAY}};
+      {200, PRANDOM}, {7800, PEXPLOIT}, {6767676767767, DISPLAY}};
 
-  world.QLearning(experimentThreeInstructions);
+  world.QLearning(experimentOneInstructions);
 
   world.QLearning(experimentTwoInstructions);
 

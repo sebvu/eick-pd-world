@@ -76,8 +76,46 @@ int PDworld::apply(PDstate &s, const Action a) {
   }
 }
 
-void PDworld::QLearning(std::vector<std::pair<int, std::string>> instructions) {
+// will use PRANDOM, PGREEDY, PEXPLOIT and DISPLAY
+void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
+  PDstate worldState;
+  QTable Q{};
 
+  for (auto &p : i) {
+    if (p.second == PRANDOM) {
+      // PRANDOM Qlearning
+      for (int i = 0; i < p.first; i++) {
+      }
+    } else if (p.second == PGREEDY) {
+      // PGREEDY Qlearning
+      for (int i = 0; i < p.first; i++) {
+      }
+    } else if (p.second == PEXPLOIT) {
+      // PEXPLOIT Qlearning
+      for (int i = 0; i < p.first; i++) {
+      }
+    } else if (p.second == DISPLAY) {
+      // DISPLAY Qlearning
+    }
+  }
 }
 
-void PDworld::SARSA(std::vector<std::pair<int, std::string>> instructions) {}
+// will use PRANDOM, PEXPLOIT and DISPLAY
+void PDworld::SARSA(std::vector<std::pair<int, std::string>> i) {
+  PDstate worldState;
+  QTable Q{};
+
+  for (auto &p : i) {
+    if (p.second == PRANDOM) {
+      // PRANDOM SARSA
+      for (int i = 0; i < p.first; i++) {
+      }
+    } else if (p.second == PEXPLOIT) {
+      // PEXPLOIT SARSA
+      for (int i = 0; i < p.first; i++) {
+      }
+    } else if (p.second == DISPLAY) {
+      // DISPLAY SARSA
+    }
+  }
+}
