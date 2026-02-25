@@ -4,7 +4,7 @@
 #include <vector>
 
 #define PRANDOM "PRANDOM"
-#define PEXPLOIT "PEXPLOIT"
+#define PEPLOIT "PEPLOIT"
 #define PGREEDY "PGREEDY"
 #define DISPLAY "DISPLAY"
 
@@ -100,17 +100,19 @@ int main() {
   std::vector<std::pair<int, std::string>> experimentTwoInstructions = {
       {200, PRANDOM},
       {676767, DISPLAY},
-      {3000, PEXPLOIT},
+      {3000, PEPLOIT},
       {6767676767, DISPLAY},
-      {4800, PEXPLOIT}};
+      {4800, PEPLOIT}};
 
   // SARSA
   std::vector<std::pair<int, std::string>> experimentThreeInstructions = {
-      {200, PRANDOM}, {7800, PEXPLOIT}, {6767676767767, DISPLAY}};
+      {200, PRANDOM}, {7800, PEPLOIT}, {6767676767767, DISPLAY}};
 
   world.QLearning(experimentOneInstructions, 1);
 
   world.QLearning(experimentTwoInstructions, 2);
 
   world.SARSA(experimentThreeInstructions, 3);
+
+  out.close();
 }

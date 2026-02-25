@@ -501,7 +501,7 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
 
         std::vector<Action> futureOps = aplop(worldState); // new worldstate
         Action randomNextOp =
-            getOperationWithPRANDOM(operations); // re-run same policy
+            getOperationWithPRANDOM(futureOps); // re-run same policy
         double randomNextQas =
             getQUtil(worldState, Q, randomNextOp); // get QUtil
         double calculatedUtil =
@@ -523,7 +523,7 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i,
         double r = apply(worldState, op);    // change worldstate
 
         std::vector<Action> futureOps = aplop(worldState); // new worldstate
-        Action randomNextOp = getOperationWithPEPLOIT(operations, worldState,
+        Action randomNextOp = getOperationWithPEPLOIT(futureOps, worldState,
                                                       Q); // re-run same policy
         double randomNextQas =
             getQUtil(worldState, Q, randomNextOp); // get QUtil
