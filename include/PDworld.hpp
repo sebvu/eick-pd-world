@@ -6,13 +6,19 @@
 
 class PDworld {
 private:
-  const double ALPHA;          // learning rate
-  const double GAMMA;          // discount rate
-  const int GRID_I;            // I size of PDworld
-  const int GRID_J;            // J size of PDworld
-  const PDstate initialState;  // the initial state for all experiments
+  const double ALPHA;                   // learning rate
+  const double GAMMA;                   // discount rate
+  static constexpr int GRID_I = 5;      // I size of PDworld
+  static constexpr int GRID_J = 5;      // J size of PDworld
+  static constexpr int NUM_ACTIONS = 6; // set number of actions
+  const PDstate initialState;           // the initial state for all experiments
   const PDstate terminalState; // the terminal state for all experiments
   const Rewards rewards;       // rewards for different actions defined
+
+  // the 2 is simply X as 0 or 1
+  using QTable = std::array<
+      std::array<std::array<std::array<double, NUM_ACTIONS>, 2>, GRID_I>,
+      GRID_J>;
 
   // different policies
   static constexpr std::string_view PRANDOM = "PRANDOM";
@@ -20,17 +26,18 @@ private:
   static constexpr std::string_view PGREEDY = "PGREEDY";
   static constexpr std::string_view DISPLAY = "DISPLAY"; // display the Q-table
 
-  static constexpr std::string_view NDIR = "NORTH";      // display the Q-table
-  static constexpr std::string_view EDIR = "EAST";       // display the Q-table
-  static constexpr std::string_view SDIR = "SOUTH";      // display the Q-table
-  static constexpr std::string_view WDIR = "WEST";       // display the Q-table
-  static constexpr std::string_view DROPOFF = "DROPOFF"; // display the Q-table
-  static constexpr std::string_view PICKUP = "PICKUP";   // display the Q-table
+  enum class Action : int {
+    North = 0,
+    East = 1,
+    South = 2,
+    West = 3,
+    Pickup = 4,
+    Dropoff = 5
+  };
 
 public:
   PDworld(const PDstate initialState, const PDstate terminalState,
-          const Rewards rewards, const double ALPHA, const double GAMMA,
-          const int GRID_I, const int GRID_J);
+          const Rewards rewards, const double ALPHA, const double GAMMA);
 
   void QLearning(std::set<std::pair<int, std::string>> instructions);
 

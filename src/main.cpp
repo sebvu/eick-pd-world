@@ -20,8 +20,6 @@ int main() {
 
   constexpr double ALPHA = 0.3; // learning rate
   constexpr double GAMMA = 0.5; // discount rate
-  constexpr int GRID_I = 5;     // I size of PDworld
-  constexpr int GRID_J = 5;     // J size of PDworld
 
   const std::pair<int, int> a_loc = {1, 1}, b_loc = {3, 3}, c_loc = {5, 5},
                             d_loc = {5, 1}, e_loc = {5, 3}, f_loc = {2, 5};
@@ -73,8 +71,7 @@ int main() {
 
   // actual PDworld initializaiton and tests
 
-  PDworld world = PDworld(initialState, terminalState, rewards, ALPHA, GAMMA,
-                          GRID_I, GRID_J);
+  PDworld world = PDworld(initialState, terminalState, rewards, ALPHA, GAMMA);
 
   // format of sets for experiment instructions
 
