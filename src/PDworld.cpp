@@ -1,4 +1,6 @@
 #include "PDworld.hpp"
+#include <iostream>
+#include <random>
 #include <vector>
 
 PDworld::PDworld(const PDstate *initialState, const PDstate *terminalState,
@@ -28,21 +30,21 @@ std::vector<PDworld::Action> PDworld::aplop(const PDstate &s) {
   bool onPickupA = isAt({s.a_loc.first, s.a_loc.second});
   bool onPickupB = isAt({s.b_loc.first, s.b_loc.second});
   bool onPickupC = isAt({s.c_loc.first, s.c_loc.second});
-  if (s.x == false && (onPickupA || onPickupB || onPickupC))
+  if (s.x == 0 && (onPickupA || onPickupB || onPickupC))
     ops.push_back(Action::Pickup);
 
   // verify if dropoff is valid
   bool onDropoffD = isAt({s.d_loc.first, s.d_loc.second});
   bool onDropoffE = isAt({s.e_loc.first, s.e_loc.second});
   bool onDropoffF = isAt({s.f_loc.first, s.f_loc.second});
-  if (s.x == true && (onDropoffD || onDropoffE || onDropoffF))
+  if (s.x == 1 && (onDropoffD || onDropoffE || onDropoffF))
     ops.push_back(Action::Dropoff);
 
   return ops;
 }
 
 // changes world state given action, returns the reward given the change
-int PDworld::apply(PDstate &s, const Action a) {
+double PDworld::apply(PDstate &s, const Action a) {
 
   std::pair<int, int> p = {s.i, s.j};
 
@@ -65,17 +67,102 @@ int PDworld::apply(PDstate &s, const Action a) {
     break;
   case Action::Pickup: {
     (*s.loc_val[p])--;
-    s.x = true;
+    s.x = 1;
     return PDworld::rewards.pickupReward;
     break;
   }
   case Action::Dropoff: {
     (*s.loc_val[p])++;
-    s.x = false;
+    s.x = 0;
     return PDworld::rewards.dropoffReward;
     break;
   }
   }
+}
+
+double PDworld::getQUtil(PDstate &s, Qtable &q, Action a) {
+  int s0 = 0, t0 = 0, u0 = 0;
+  // not carrying
+  if (s.x == 0) {
+    if (*s.loc_val[s.a_loc] >= 1) {
+      s0 = 1;
+    }
+    if (*s.loc_val[s.b_loc] >= 1) {
+      t0 = 1;
+    }
+    if (*s.loc_val[s.c_loc] >= 1) {
+      u0 = 1;
+    }
+    // carrying
+  } else {
+    if (*s.loc_val[s.d_loc] < 5) {
+      s0 = 1;
+    }
+    if (*s.loc_val[s.e_loc] < 5) {
+      t0 = 1;
+    }
+    if (*s.loc_val[s.f_loc] < 5) {
+      u0 = 1;
+    }
+  }
+
+  return q[s.i][s.j][s.x][s0][t0][u0][static_cast<int>(a)];
+}
+
+double PDworld::getQLearningUtility(const double r, const double Qas,
+                                    const double maxNextQas) {
+  return ((1 - ALPHA) * Qas) + ALPHA * (r + (GAMMA * maxNextQas));
+}
+
+double PDworld::getSARSAUtility(const double r, const double Qas,
+                                const double nextQas) {
+  return Qas + (ALPHA * (r + (GAMMA * nextQas) - Qas));
+}
+
+// simple random number helper
+int randomNumHelper(int lowInclusive, int highInclusive) {
+  static std::mt19937 gen(std::random_device{}());
+
+  std::uniform_int_distribution<> distr(lowInclusive, highInclusive);
+
+  return distr(gen);
+}
+
+PDworld::Action PDworld::getOperationWithPRANDOM(std::vector<Action> &ops) {
+  for (auto &o : ops) {
+    if (o == Action::Dropoff || o == Action::Pickup) {
+      return o;
+    }
+  }
+
+  return ops[randomNumHelper(0, ops.size() - 1)];
+}
+
+PDworld::Action PDworld::getOperationWithPGREEDY(std::vector<Action> &ops,
+                                                 PDstate &s, Qtable &q) {
+
+  Action maxUtilOp;
+
+  bool firstRunPast = false; // simple lock
+
+  for (auto &o : ops) {
+    if (o == Action::Dropoff || o == Action::Pickup) {
+      return o;
+    }
+
+    // could be better but whatevs
+    if (firstRunPast == false) {
+      maxUtilOp = o;
+    } else if (getQUtil(s, q, o) == getQUtil(s, q, maxUtilOp)) {
+      if (randomNumHelper(0, 1) == 1) {
+        maxUtilOp = o;
+      }
+    } else if (getQUtil(s, q, o) > getQUtil(s, q, maxUtilOp)) {
+      maxUtilOp = o;
+    }
+  }
+
+  return maxUtilOp;
 }
 
 // will use PRANDOM, PGREEDY, PEXPLOIT and DISPLAY
@@ -83,7 +170,7 @@ void PDworld::QLearning(std::vector<std::pair<int, std::string>> i) {
 
   // initlization of PDworld
   PDstate worldState = initialState;
-  QTable Q{};
+  Qtable Q{};
 
   for (auto &p : i) {
     if (p.second == PRANDOM) {
@@ -109,7 +196,7 @@ void PDworld::SARSA(std::vector<std::pair<int, std::string>> i) {
 
   // initlization of PDworld
   PDstate worldState = initialState;
-  QTable Q{};
+  Qtable Q{};
 
   for (auto &p : i) {
     if (p.second == PRANDOM) {

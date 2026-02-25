@@ -18,7 +18,7 @@ private:
   const Rewards rewards;       // rewards for different actions defined
 
   // the 2 is simply X as 0 or 1
-  using QTable = std::array<
+  using Qtable = std::array<
       std::array<
           std::array<
               std::array<std::array<std::array<std::array<double, NUM_ACTIONS>,
@@ -48,13 +48,27 @@ private:
   std::vector<Action> aplop(const PDstate &s);
 
   // apply the world state given action, return reward given the change
-  int apply(PDstate &s, const Action a);
+  double apply(PDstate &s, const Action a);
+
+  // get the requsted Q value
+  double getQUtil(PDstate &s, Qtable &q, Action a);
 
   // run the QLearning algorithm
-  int getQLearningUtility(PDstate &s2);
+  double getQLearningUtility(const double r, const double Qas, double maxQas);
 
   // run the SARSA algorithm
-  int getSARSAUtility();
+  double getSARSAUtility(const double r, const double Qas,
+                         const double nextQas);
+
+  // PRANDOM policy
+  Action getOperationWithPRANDOM(std::vector<Action> &ops);
+
+  // PGREEDY policy
+  Action getOperationWithPGREEDY(std::vector<Action> &ops, PDstate &s,
+                                 Qtable &q);
+
+  // PEXPLOIT policy
+  Action getOperationWithPEXPLOIT(std::vector<Action> ops);
 
 public:
   PDworld(const PDstate *initialState, const PDstate *terminalState,
