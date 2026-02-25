@@ -65,11 +65,13 @@ int PDworld::apply(PDstate &s, const Action a) {
     break;
   case Action::Pickup: {
     (*s.loc_val[p])--;
+    s.x = true;
     return PDworld::rewards.pickupReward;
     break;
   }
   case Action::Dropoff: {
     (*s.loc_val[p])++;
+    s.x = false;
     return PDworld::rewards.dropoffReward;
     break;
   }

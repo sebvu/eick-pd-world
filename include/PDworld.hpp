@@ -19,8 +19,15 @@ private:
 
   // the 2 is simply X as 0 or 1
   using QTable = std::array<
-      std::array<std::array<std::array<double, NUM_ACTIONS>, 2>, GRID_I>,
-      GRID_J>;
+      std::array<
+          std::array<
+              std::array<std::array<std::array<std::array<double, NUM_ACTIONS>,
+                                               2>, // u
+                                    2>,            // t
+                         2>,                       // s
+              2>,                                  // x
+          GRID_J>,                                 // j
+      GRID_I>;                                     // i
 
   // different policies
   static constexpr std::string_view PRANDOM = "PRANDOM";
@@ -42,6 +49,12 @@ private:
 
   // apply the world state given action, return reward given the change
   int apply(PDstate &s, const Action a);
+
+  // run the QLearning algorithm
+  int getQLearningUtility(PDstate &s2);
+
+  // run the SARSA algorithm
+  int getSARSAUtility();
 
 public:
   PDworld(const PDstate *initialState, const PDstate *terminalState,
